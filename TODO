@@ -1,0 +1,4 @@
+ - store url and latest content in local storage
+ - create function to get rss content
+ - settings page to add urls
+ - create alarm to fetch rss content
