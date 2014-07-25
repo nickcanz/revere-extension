@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "Get notifications when a status page is updated.",
-  "homepage_url": "http://nickcanzoneri.com",
+  "homepage_url": "https://github.com/nickcanz/revere-extension",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
