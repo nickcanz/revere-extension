@@ -1,4 +1,7 @@
- - store url and latest content in local storage
+ - init storage with some urls on install
  - create function to get rss content
- - settings page to add urls
+ - store url and latest content in local storage
  - create alarm to fetch rss content
+ - settings page to add urls
+ - make an icon for the extension
+ - Add extension to chrome store
