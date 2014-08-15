@@ -14,7 +14,7 @@
     "scripts": [ "src/bg/background.js"],
     "persistent": false
   },
-  "permissions": [ "notifications", "<all_urls>", "storage" ],
+  "permissions": [ "notifications", "<all_urls>", "storage", "tabs" ],
   "options_page": "src/options/index.html",
   "browser_action": {
     "default_icon": "icons/icon19.png",

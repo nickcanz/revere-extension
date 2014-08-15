@@ -53,8 +53,6 @@ var Revere = (function () {
           title: title,
           link: link
         });
-
-        console.log('Rss entry is: %o', item);
       }
     };
 
@@ -73,10 +71,10 @@ var Revere = (function () {
 
 chrome.notifications.onClicked.addListener(function (notificationId) {
   if (Revere.notificationLinks[notificationId]) {
+    chrome.tabs.create({url: Revere.notificationLinks[notificationId]}, Revere.noop);
     console.log('Open up browser to go to: %s', Revere.notificationLinks[notificationId]);
   }
 });
-
 
 chrome.runtime.onStartup.addListener(function() {
   console.log('Starting up...');
