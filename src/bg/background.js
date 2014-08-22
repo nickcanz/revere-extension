@@ -10,7 +10,7 @@ var Revere = (function () {
     var opts = {
       type: 'basic',
       title: entry.title,
-      iconUrl: 'icons/icon128.png',
+      iconUrl: 'icons/revere-icon-144.png',
       isClickable: true,
       message: entry.content
     };
