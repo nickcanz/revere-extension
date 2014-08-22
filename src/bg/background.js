@@ -78,9 +78,12 @@ var Revere = (function () {
     };
   };
 
-  self.getItem = function (url) {
+  self.getItem = function (feed) {
 
-    var xhr = new XMLHttpRequest();
+    var url = feed.url,
+        xhr = new XMLHttpRequest();
+
+    console.log('Query url: %s', url);
 
     xhr.onreadystatechange = function () {
       if (xhr.readyState != 4) return;
@@ -89,8 +92,7 @@ var Revere = (function () {
         var xmlDoc = xhr.responseXML;
 
         var data = self.evaluateAtom(xmlDoc) || self.evaluateRSS(xmlDoc) || null;
-
-        self.alertForEntry(data);
+        self.alertIfLatest({feed: feed, latestEntry: data});
       }
     };
 
@@ -98,43 +100,47 @@ var Revere = (function () {
     xhr.send();
   };
 
-  self.isLatestItem = function (entry) {
+  self.alertIfLatest = function (feedData) {
+    var key = 'latest.' + feedData.feed.url;
+    chrome.storage.local.get(key, function (latestEntry) {
+      console.log('Latest entry for %o is %o', key, latestEntry);
+      if (!latestEntry || latestEntry[key] != feedData.latestEntry.link) {
+        self.alertForEntry(feedData.latestEntry);
+        var dataToStore = {};
+        dataToStore[key] = feedData.latestEntry.link;
+        chrome.storage.local.set(dataToStore, self.noop);
+      }
+    });
   };
 
-  self.queryRSS = function (items) {
-    items.urls.map(self.getItem);
+  self.queryRSS = function (data) {
+    data.feeds.map(self.getItem);
   };
 
   return self;
 } ());
 
-chrome.notifications.onClicked.addListener(function (notificationId) {
-  if (Revere.notificationLinks[notificationId]) {
-    chrome.tabs.create({url: Revere.notificationLinks[notificationId]}, Revere.noop);
-    console.log('Open up browser to go to: %s', Revere.notificationLinks[notificationId]);
-  }
-});
-
-chrome.runtime.onStartup.addListener(function() {
-  console.log('Starting up...');
-});
-
 chrome.runtime.onInstalled.addListener(function () {
-  console.log('Got installed...');
-
   chrome.storage.local.set({
-    'urls': [
-      'https://status.heroku.com/feed',
-      'http://status.mailgun.com/history.atom',
-      'http://feeds.feedburner.com/postmarkstatus?format=xml'
+    feeds: [
+      {url: 'https://status.heroku.com/feed'},
+      {url: 'http://status.mailgun.com/history.atom'},
+      {url: 'http://feeds.feedburner.com/postmarkstatus?format=xml'}
     ]
   }, Revere.noop);
 
 });
 
 chrome.browserAction.onClicked.addListener(function () {
-  console.log('hi there');
+  chrome.storage.local.get('feeds', Revere.queryRSS);
+});
 
-  chrome.storage.local.get('urls', Revere.queryRSS);
+chrome.notifications.onClicked.addListener(function (notificationId) {
+  if (Revere.notificationLinks[notificationId]) {
+    console.log('Open up browser to go to: %s', Revere.notificationLinks[notificationId]);
 
+    chrome.tabs.create({url: Revere.notificationLinks[notificationId]}, function (tab) {
+      chrome.windows.update(tab.windowId, { focused: true }, Revere.noop);
+    });
+  }
 });
