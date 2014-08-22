@@ -14,7 +14,7 @@
     "scripts": [ "src/bg/background.js"],
     "persistent": false
   },
-  "permissions": [ "notifications", "<all_urls>", "storage", "tabs" ],
+  "permissions": [ "notifications", "<all_urls>", "storage", "tabs", "alarms" ],
   "options_page": "src/options/index.html",
   "browser_action": {
     "default_icon": "icons/revere-icon-19.png",

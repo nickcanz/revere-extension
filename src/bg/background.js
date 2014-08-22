@@ -113,8 +113,10 @@ var Revere = (function () {
     });
   };
 
-  self.queryRSS = function (data) {
-    data.feeds.map(self.getItem);
+  self.queryRSSFeeds = function () {
+    chrome.storage.local.get('feeds', function (data) {
+      data.feeds.map(self.getItem);
+    });
   };
 
   return self;
@@ -125,14 +127,22 @@ chrome.runtime.onInstalled.addListener(function () {
     feeds: [
       {url: 'https://status.heroku.com/feed'},
       {url: 'http://status.mailgun.com/history.atom'},
-      {url: 'http://feeds.feedburner.com/postmarkstatus?format=xml'}
+      {url: 'http://feeds.feedburner.com/postmarkstatus?format=xml'},
+      {url: 'http://feeds.kottke.org/main'}
     ]
   }, Revere.noop);
 
+  chrome.alarms.create('queryRSS', { periodInMinutes: 5 });
+});
+
+chrome.alarms.onAlarm.addListener(function (alarm) {
+  if (alarm && alarm.name == 'queryRSS') {
+    Revere.queryRSSFeeds();
+  }
 });
 
 chrome.browserAction.onClicked.addListener(function () {
-  chrome.storage.local.get('feeds', Revere.queryRSS);
+  Revere.queryRSSFeeds();
 });
 
 chrome.notifications.onClicked.addListener(function (notificationId) {
