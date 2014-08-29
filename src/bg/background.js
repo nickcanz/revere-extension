@@ -1,10 +1,6 @@
 var Revere = (function () {
   var self = {};
 
-  self.notificationLinks = {};
-
-  self.noop = function () {};
-
   self.alertForEntry = function (entry) {
 
     var opts = {
@@ -16,7 +12,9 @@ var Revere = (function () {
     };
 
     chrome.notifications.create('', opts, function (id) {
-      self.notificationLinks[id] = entry.link;
+      var linkData = {};
+      linkData['notificationlink.' + id] = entry.link;
+      chrome.storage.local.set(linkData);
     });
   };
 
@@ -108,7 +106,7 @@ var Revere = (function () {
         self.alertForEntry(feedData.latestEntry);
         var dataToStore = {};
         dataToStore[key] = feedData.latestEntry.link;
-        chrome.storage.local.set(dataToStore, self.noop);
+        chrome.storage.local.set(dataToStore);
       }
     });
   };
@@ -130,9 +128,9 @@ chrome.runtime.onInstalled.addListener(function () {
       {url: 'http://feeds.feedburner.com/postmarkstatus?format=xml'},
       {url: 'http://feeds.kottke.org/main'}
     ]
-  }, Revere.noop);
+  });
 
-  chrome.alarms.create('queryRSS', { periodInMinutes: 5 });
+  chrome.alarms.create('queryRSS', { periodInMinutes: 2 });
 });
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
@@ -146,11 +144,20 @@ chrome.browserAction.onClicked.addListener(function () {
 });
 
 chrome.notifications.onClicked.addListener(function (notificationId) {
-  if (Revere.notificationLinks[notificationId]) {
-    console.log('Open up browser to go to: %s', Revere.notificationLinks[notificationId]);
 
-    chrome.tabs.create({url: Revere.notificationLinks[notificationId]}, function (tab) {
-      chrome.windows.update(tab.windowId, { focused: true }, Revere.noop);
-    });
-  }
+  var key = 'notificationlink.' + notificationId;
+  chrome.storage.local.get(key, function (items) {
+
+    if (items[key]) {
+      chrome.tabs.create({url: items[key]}, function (tab) {
+        chrome.windows.update(tab.windowId, { focused: true });
+      });
+    }
+
+  });
+});
+
+chrome.notifications.onClosed.addListener(function (notificationId) {
+  var key = 'notificationlink.' + notificationId;
+  chrome.storage.local.remove(key);
 });
