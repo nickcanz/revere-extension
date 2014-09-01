@@ -13,24 +13,10 @@ var RevereOptions = (function () {
         e.stopPropagation();
         break;
       }
-
-
   };
 
   self.buildOptionItem = function (feed) {
     var url = feed.url;
-    console.log('Build thing for url %s', url);
-
-//    var listItem = document.createElement('div');
-//    listItem.setAttribute('role', 'listitem');
-//
-//    var urlInput = document.createElement('input');
-//    urlInput.setAttribute('type', 'text');
-//    urlInput.setAttribute('value', url);
-//
-//    listItem.appendChild(urlInput);
-//    self.urlContainer.appendChild(listItem);
-
 
     var row = document.createElement('div');
 
@@ -68,11 +54,38 @@ var RevereOptions = (function () {
     self.urlContainer.appendChild(row);
   };
 
+  self.addBlankRow = function () {
+
+    var row = document.createElement('div');
+
+    row.setAttribute('editing', true);
+
+    var textEl = document.createElement('div');
+    textEl.className = 'static-text';
+    textEl.textContent = '';
+    textEl.setAttribute('displaymode', 'static');
+    row.appendChild(textEl);
+
+    var inputEl = document.createElement('input');
+    inputEl.className = 'editable-text';
+    inputEl.type = 'text';
+    inputEl.value = '';
+    inputEl.setAttribute('displaymode', 'edit');
+    inputEl.setAttribute('placeholder', 'URL for the RSS or Atom feed');
+    inputEl.staticVersion = textEl;
+
+    row.appendChild(inputEl);
+
+    self.urlContainer.appendChild(row);
+  };
+
+
   self.getUrls = function () {
     chrome.storage.local.get('feeds', function (data) {
       data.feeds.map(self.buildOptionItem);
-    });
 
+      self.addBlankRow();
+    });
   };
 
   self.init = function () {
