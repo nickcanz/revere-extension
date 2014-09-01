@@ -1,10 +1,44 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title></title>
-</head>
-<body>
-  <h2>Hi I'm an option!</h2>
+	<head>
+		<!-- Replace this with your extension's title. -->
+		<title>Options - Revere : Warning system for webapps</title>
+		<link rel="stylesheet" type="text/css" href="../../css/options/from-chrome.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/options/options.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/options/options-widgets.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/options/from-chrome-search-options.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/options/revere-options.css" />
+		<script type="text/javascript" src="../../js/options/options-setup.js"></script>
+		<script type="text/javascript" src="../../src/options/revere-options.js"></script>
+	</head>
+	<body>
+		<nav class="sideBar">
+			<h1>Chrome</h1>
+			<ul>
+				<li><a href="chrome://history" target="_blank">History</a></li>
+				<li>
+					<a href="chrome://extensions">Extensions</a>
+					<ul>
+						<!-- Replace this with your extension's title. -->
+						<li>Revere : Warning system for webapps</li>
+					</ul>
+				</li>
+				<li><a href="chrome://settings">Settings</a></li>
+				<li><a href="chrome://help">Help</a></li>
+			</ul>
+		</nav>
+		<header>
+			<!-- Replace this with your extension's title. -->
+			<h1>Revere : Warning system for webapps</h1>
+		</header>
+		<!-- Replace everything below this point with your extension's options. -->
 
-</body>
+    <section>
+
+      <h3>Feeds to check</h3>
+
+      <list id="url-list"></list>
+
+    </section>
+	</body>
 </html>

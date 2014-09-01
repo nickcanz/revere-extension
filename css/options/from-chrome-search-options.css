@@ -1,0 +1,291 @@
+/* Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file. */
+
+.raw-button,
+.raw-button:hover,
+.raw-button:active {
+  -webkit-box-shadow: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  min-width: 0;
+  padding: 1px 6px;
+}
+
+.bottom-strip {
+  border-top: none;
+  bottom: 0;
+  padding: 12px;
+  position: absolute;
+  right: 0;
+}
+
+list {
+  /* Min height is a multiple of the list item height (32) */
+  min-height: 192px;
+}
+
+/* Editable List properties */
+list > * {
+  -webkit-box-align: center;
+  -webkit-transition: 150ms background-color;
+  border: none;
+  border-radius: 0;  /* TODO(dbeam): Is this necessary? */
+  box-sizing: border-box;
+  display: -webkit-box;
+  height: 32px;
+  margin: 0;
+}
+
+list:not([disabled]) > :hover {
+  background-color: rgb(228, 236, 247);
+}
+
+/* TODO(stuartmorgan): Once this becomes the list style for other WebUI pages
+ * these rules can be simplified (since they wont need to override other rules).
+ */
+
+list:not([has-element-focus]) > [selected],
+list:not([has-element-focus]) > [lead][selected] {
+  background-color: #d0d0d0;
+  background-image: none;
+}
+
+list[has-element-focus] > [selected],
+list[has-element-focus] > [lead][selected],
+list:not([has-element-focus]) > [selected]:hover,
+list:not([has-element-focus]) > [selected][lead]:hover {
+  background-color: rgb(187, 206, 233);
+  background-image: none;
+}
+
+list .deletable-item {
+  -webkit-box-align: center;
+}
+
+list .deletable-item > :first-child {
+  -webkit-box-align: center;
+  -webkit-box-flex: 1;
+  -webkit-padding-end: 5px;
+  display: -webkit-box;
+}
+
+list .row-delete-button {
+  -webkit-transition: 150ms opacity;
+  background-color: transparent;
+  /* TODO(stuartmorgan): Replace with real images once they are available. */
+  background-image: -webkit-image-set(
+      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAiElEQVR42r2RsQrDMAxEBRdl8SDcX8lQPGg1GBI6lvz/h7QyRRXV0qUULwfvwZ1tenw5PxToRPWMC52eA9+WDnlh3HFQ/xBQl86NFYJqeGflkiogrOvVlIFhqURFVho3x1moGAa3deMs+LS30CAhBN5nNxeT5hbJ1zwmji2k+aF6NENIPf/hs54f0sZFUVAMigAAAABJRU5ErkJggg==') 1x,
+      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAA9UlEQVR4Xu3UsWrCUByH0fMEouiuhrg4xohToJVGH0CHLBncEwfx/VvIFHLJBWmHDvKbv7PcP9f3L/fXwBsApZSRpUpEgbOnxwiReng6x4AvjdrNXRLkibubWqMcB9Yujk7qjhjmtZOji/U4wELuoBwQXa50kFsQA5jK+kQ/l5kSA4ZEK5Fo+3kcCIlGM8ijQEhUqkEeBUKiUPTyl4C5vZ1cbmdv/iqwclXY6aZwtXoFSLQqhVwmkytUWglxAMG7T0yCu4gD0v7ZBKeVxoEwFxIxYBPmIWEzDnyEeUj4HAfYdvmMcGYdsSUGsOzlIbHEv/uV38APrreiBRBIs3QAAAAASUVORK5CYII=') 2x);
+  border: none;
+  display: block;
+  height: 16px;
+  opacity: 1;
+  width: 16px;
+}
+
+list > *:not(:hover):not([selected]):not([lead]) .row-delete-button,
+list:not([has-element-focus]) > *:not(:hover):not([selected])
+    .row-delete-button,
+list[disabled] .row-delete-button,
+list .row-delete-button[disabled] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* HostedApp entries use the disabled closing button to display the App's
+ * favicon, as an indicator that instead of deleting the permission here
+ * the user has to remove the hosted app.*/
+list div[role='listitem'][managedby='HostedApp'] .row-delete-button {
+  opacity: 1;
+}
+
+list .row-delete-button:hover {
+  background-image: -webkit-image-set(
+      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAqUlEQVR4XqWRMQqEMBBF/1E8Ra6x6V3FRnS9QbCxtJg6Z7CzE9lTiIXXyUb3C8EULixDIMM8Zt4kcDfxM5A45U+cgeXnC1tREgkzAgob3hiq3CUHvGLG4FTQoSgxQGDrzN8WTLBGnx2IVDksen9GH7Z9hA5E6uxABMJyCHDMCEGHzugLQPPlBCBNGq+5YtpnGw1Bv+te15ypljTpVzdak5Opy+z+qf//zQ+Lg+07ay5KsgAAAABJRU5ErkJggg==') 1x,
+      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAB4UlEQVR42u2VsWoCQRBAh+MUFP0C1V9QD4NEOxs9xBQHQVCwSJFWVBAtBNXCxk6wTkBJYUTwEwQLC61E8QP0NzZzt5g5726DkC7EYWHZ8T3WndkV2C/jLwn4hwVYBIdLn9vkLp79QcBCTDMiy3w2gQ9XeTYkEHA8vqj2rworXu3HF1YFfSWgp5QFnKVLvYvzDEKEZ5hW70oXOCtcEbQLIkx7+IQtfMBSOjU6XEF4oyOdYInZbXyOuajjDlpNeQgleIUJKUz4BDMledhqOu/AzVSmzZ49CUjCC0yvim98iqtJT2L2jKsqczsdok9XrHNexaww415lnTNwn6CM/KxJIR8bnUZHPhLO6yMoIyk2pNjLewFuE5AiY1KMMQx8Q7hQYFek4AkjxXFe1rsF84I/BTFQMGL+1Lxwl4DwdtM1gjwKohgxyLtG7SYpxALqugOMcfOKN+bFXeBsLB1uulNcRqq7/tt36k41zoL6QlxGjtd6lrahiqCi1iOFYyvXuxY8yzK33VnvUivbLlOlj/jktm0s3YnXrNIXXufHNxuOGasi8S68zkwrlnV8ZcJJsTIUxbLgQcFZWE8N0gau2p40VVcM0gYeFpSRK6445UhBuKiRgiyKw+34rLt59nb1/7+RwReVkaFtqvNBuwAAAABJRU5ErkJggg==') 2x);
+}
+
+list .row-delete-button:active {
+  background-image: -webkit-image-set(
+      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAARElEQVQoz2P4z4AfMlBLAYMdwxkghgEwD1XBGTC0g0sDIaYJECVwFqoChBK4WegKkJWArSJZAQErCDqSKG/iCyhaRhYA9LDIbULDzlIAAAAASUVORK5CYII=')
+          1x,
+      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAA/ElEQVR4Xu3UsWrCUBiG4efGlIBoIMFbcnYolYJ3pg4iKGrGYFTRwaUFhYAekiDt0EG++X2W83N8/3J/DbwBMJJSsdQItcDY1VlCOImzq3Ed8OmicHASB3ns5KBw8VUNpDJrW7uAiJ3sbK1l0mqArpmFTUlQ5jYWZrrUAUSmT0SZm4qoA56JvVhs/5g3A7RLolA85A1ASOTye65NMxASK6syfxGITMzvMxG9CvRkliWwlOm9AsSOcitzU1NzK7mjuBkQvHtLK7iLBiB5PhttJSGpB8I8vM6kDuiHeUjoVwMfYR4SRtUAw1veIZzOjRhSBzCoyKFjgH/3K7+BHzg+Cgw0eSW3AAAAAElFTkSuQmCC')
+          2x);
+}
+
+list .static-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+list[type='text'][inlineeditable] input {
+  box-sizing: border-box;
+  margin: 0;
+  width: 100%;
+}
+
+list > :not([editing]) [displaymode='edit'] {
+  display: none;
+}
+
+list > [editing] [displaymode='static'] {
+  /* Don't use display:none because we need to keep an element focusable. */
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  visibility: hidden;
+}
+
+list > [editing] input:invalid {
+  /* TODO(stuartmorgan): Replace with validity badge */
+  background-color: pink;
+}
+
+.list-inline-button {
+  -webkit-appearance: none;
+  -webkit-transition: opacity 150ms;
+  background: rgb(138, 170, 237);
+  border: none;
+  border-radius: 2px;
+  color: white;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+.list-inline-button:hover {
+  opacity: 1;
+}
+
+.option-name {
+  padding-right: 5px;
+}
+
+html[dir=rtl].option-name {
+  padding-left: 5px;
+}
+
+.favicon-cell {
+  -webkit-padding-start: 20px;
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: 16px;
+}
+
+input[type='url'].favicon-cell {
+  -webkit-padding-start: 22px;
+  background-position-x: 4px;
+}
+
+html[dir=rtl] input.favicon-cell {
+  background-position-x: -webkit-calc(100% - 4px);
+}
+
+list .favicon-cell {
+  -webkit-margin-start: 7px;
+  -webkit-padding-start: 26px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[dir=rtl] list .favicon-cell {
+  background-position: right;
+}
+
+html[enable-background-mode=false] #background-mode-section {
+ display: none;
+}
+
+/* UI Controls */
+
+/* LIST */
+.settings-list[has-element-focus] {
+
+/* This matches the native list outline on Mac */
+  outline-color: rgb(117, 154, 217);
+  outline-offset: -1px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+
+.suboption {
+  -webkit-margin-start: 23px;
+}
+
+list.autocomplete-suggestions {
+  background-color: white;
+  border: 1px solid #aaa;
+  border-radius: 2px;
+  min-height: 0;
+  opacity: 0.9;
+  position: fixed;
+  z-index: 3;
+}
+
+list.autocomplete-suggestions > div {
+  height: auto;
+}
+
+list.autocomplete-suggestions:not([has-element-focus]) > [selected],
+list.autocomplete-suggestions:not([has-element-focus]) > [lead][selected] {
+  background-color: rgb(187, 206, 233);
+}
+
+html:not(.focus-outline-visible)
+:enabled:focus:-webkit-any(input[type='checkbox'], input[type='radio']) {
+  /* Cancel border-color for :focus specified in widgets.css. */
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+html:not([hasFlashPlugin]) .flash-plugin-area,
+/* If the Flash plug-in supports the NPP_ClearSiteData API, we don't need to
+ * show the link to the Flash storage settings manager:
+ */
+html[flashPluginSupportsClearSiteData] .flash-plugin-area,
+html:not([flashPluginSupportsClearSiteData]) .clear-plugin-lso-data-enabled,
+html[flashPluginSupportsClearSiteData] .clear-plugin-lso-data-disabled,
+html:not([enablePepperFlashSettings]) .pepper-flash-settings {
+  display: none;
+}
+</style>
+<style>/* Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file. */
+
+#alertOverlayMessage {
+  width: 400px;
+}
+</style>
+<style>/* Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file. */
+
+#autofill-edit-address-overlay {
+  min-width: 55em;
+}
+
+#autofill-edit-credit-card-overlay {
+  min-width: 500px;
+}
+
+#autofill-edit-address-overlay .long div[role='listitem'] > div > div,
+#autofill-edit-address-overlay .long input,
+#autofill-edit-address-overlay textarea.long,
+#autofill-edit-address-overlay input.long {
+  width: 16em;
+}
+
+#autofill-edit-address-overlay .short div[role='listitem'] > div > div,
+#autofill-edit-address-overlay .short input,
+#autofill-edit-address-overlay textarea.short,
+#autofill-edit-address-overlay input.short {
+  width: 14em;
+}
+
+#autofill-edit-address-overlay .country {
+  max-width: 450px;
+}
