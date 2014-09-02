@@ -1,18 +1,51 @@
 var RevereOptions = (function () {
   var self = {};
 
-  self.handleKeypress = function (e) {
+  self.handleInputKeypress = function (e) {
 
     switch (e.keyIdentifier) {
       case 'U+001B':  // Esc
-        //Esc pressed, cancel edits
+        e.target.value = e.target.staticVersion.innerText;
+        e.target.blur();
         break;
       case 'Enter':
-        //validate input...
+        e.target.staticVersion.innerText = e.target.value;
+
+        var lastItem = self.urlContainer.children[self.urlContainer.children.length - 1];
+
+        if (e.target.parentNode == lastItem) {
+          console.log('last item');
+          //add new row
+          //delete current 'blank row'
+          //add new blank row
+        }
+        else {
+          console.log('update in place');
+        }
 
         e.stopPropagation();
         break;
       }
+  };
+
+  self.buildDisplayTextEl = function (text) {
+    var textEl = document.createElement('div');
+    textEl.className = 'static-text';
+    textEl.textContent = text;
+    textEl.setAttribute('displaymode', 'static');
+    return textEl;
+  };
+
+  self.buildInputTextEl = function (text) {
+    var inputEl = document.createElement('input');
+    inputEl.className = 'editable-text';
+    inputEl.type = 'text';
+    inputEl.value = text;
+    inputEl.setAttribute('displaymode', 'edit');
+    inputEl.addEventListener('keydown', self.handleInputKeypress);
+    inputEl.setAttribute('placeholder', 'URL for the RSS or Atom feed');
+
+    return inputEl;
   };
 
   self.buildOptionItem = function (feed) {
@@ -20,21 +53,14 @@ var RevereOptions = (function () {
 
     var row = document.createElement('div');
 
-    var textEl = document.createElement('div');
-    textEl.className = 'static-text';
-    textEl.textContent = url;
-    textEl.setAttribute('displaymode', 'static');
+    var textEl = self.buildDisplayTextEl(url)
     row.appendChild(textEl);
 
-    var inputEl = document.createElement('input');
-    inputEl.className = 'editable-text';
-    inputEl.type = 'text';
-    inputEl.value = url;
-    inputEl.setAttribute('displaymode', 'edit');
+    var inputEl = self.buildInputTextEl(url);
     inputEl.staticVersion = textEl;
 
     inputEl.addEventListener('blur', function (e) {
-      console.log('blurring'); 
+      console.log('blurring');
       e.target.parentNode.removeAttribute('editing');
     });
 
@@ -44,10 +70,18 @@ var RevereOptions = (function () {
       e.target.parentNode.setAttribute('editing', 'true');
       inputEl.focus();
       e.preventDefault();
+      e.stopPropagation();
     });
 
     var closeButton = document.createElement('button');
     closeButton.className = 'row-delete-button raw-button custom-appearance';
+
+    closeButton.addEventListener('click', function (e) {
+      console.log('delete this row!');
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
 
     row.appendChild(closeButton);
 
@@ -57,21 +91,12 @@ var RevereOptions = (function () {
   self.addBlankRow = function () {
 
     var row = document.createElement('div');
-
     row.setAttribute('editing', true);
 
-    var textEl = document.createElement('div');
-    textEl.className = 'static-text';
-    textEl.textContent = '';
-    textEl.setAttribute('displaymode', 'static');
+    var textEl = self.buildDisplayTextEl('');
     row.appendChild(textEl);
 
-    var inputEl = document.createElement('input');
-    inputEl.className = 'editable-text';
-    inputEl.type = 'text';
-    inputEl.value = '';
-    inputEl.setAttribute('displaymode', 'edit');
-    inputEl.setAttribute('placeholder', 'URL for the RSS or Atom feed');
+    var inputEl = self.buildInputTextEl('');
     inputEl.staticVersion = textEl;
 
     row.appendChild(inputEl);
