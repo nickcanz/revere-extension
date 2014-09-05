@@ -5,7 +5,7 @@ var Revere = (function () {
 
     var opts = {
       type: 'basic',
-      title: entry.title,
+      title: entry.feedTitle + ' Update: ' + entry.title,
       iconUrl: 'icons/revere-icon-144.png',
       isClickable: true,
       message: entry.content
@@ -49,11 +49,13 @@ var Revere = (function () {
 
     if (!entry) { return false; }
 
+    var feedTitle = self.searchXPath(xmlDoc, '/rss/channel/title').innerHTML;
     var title = entry.getElementsByTagName('title')[0].innerHTML;
     var link =  entry.getElementsByTagName('link')[0].innerHTML;
     var description =  entry.getElementsByTagName('description')[0].innerHTML;
 
     return {
+      feedTitle: feedTitle,
       title: title,
       link: link,
       content: self.getEscapedText(description)
@@ -65,12 +67,14 @@ var Revere = (function () {
     var entry = self.searchXPath(xmlDoc, '/f:feed/f:entry[1]');
     if (!entry) { return false; }
 
+    var feedTitle = self.searchXPath(xmlDoc, '/f:feed/f:title').innerHTML;
     var title = entry.getElementsByTagName('title')[0].innerHTML;
     var link =  entry.getElementsByTagName('link')[0].getAttribute('href');
     var content = entry.getElementsByTagName('content')[0].innerHTML;
 
     return {
       title: title,
+      feedTitle: feedTitle,
       link: link,
       content: self.getEscapedText(content)
     };
@@ -124,9 +128,10 @@ chrome.runtime.onInstalled.addListener(function () {
   chrome.storage.local.set({
     feeds: [
       {url: 'https://status.heroku.com/feed'},
-      {url: 'http://status.mailgun.com/history.atom'},
+      {url: 'http://status.aws.amazon.com/rss/ec2-us-east-1.rss'},
       {url: 'http://feeds.feedburner.com/postmarkstatus?format=xml'},
-      {url: 'http://feeds.kottke.org/main'}
+      {url: 'http://status.dploy.io/rss'},
+      {url: 'http://feeds.feedburner.com/beanstalkstatus?format=xml'}
     ]
   });
 
@@ -153,7 +158,6 @@ chrome.notifications.onClicked.addListener(function (notificationId) {
         chrome.windows.update(tab.windowId, { focused: true });
       });
     }
-
   });
 });
 
