@@ -1,6 +1,29 @@
 var RevereOptions = (function () {
   var self = {};
 
+  self.getInnerHTML = function (elem) {
+    return { url: elem.innerHTML };
+  };
+
+  self.isNotEmptyFeed = function (feed) {
+    return feed.url != '';
+  };
+
+  self.updateStorageFromDOM = function () {
+
+    var elems = document.getElementsByClassName('static-text'); 
+
+    var urls = [];
+
+    var urls = Array.prototype.map.call(elems, self.getInnerHTML);
+    var filteredUrls = Array.prototype.filter.call(urls, self.isNotEmptyFeed);
+
+    chrome.storage.local.set({feeds: filteredUrls}, function () {
+      self.urlContainer.innerHTML = '';
+      self.getUrls();
+    });
+  };
+
   self.handleInputKeypress = function (e) {
 
     switch (e.keyIdentifier) {
@@ -10,19 +33,7 @@ var RevereOptions = (function () {
         break;
       case 'Enter':
         e.target.staticVersion.innerText = e.target.value;
-
-        var lastItem = self.urlContainer.children[self.urlContainer.children.length - 1];
-
-        if (e.target.parentNode == lastItem) {
-          console.log('last item');
-          //add new row
-          //delete current 'blank row'
-          //add new blank row
-        }
-        else {
-          console.log('update in place');
-        }
-
+        self.updateStorageFromDOM();
         e.stopPropagation();
         break;
       }
@@ -77,7 +88,8 @@ var RevereOptions = (function () {
     closeButton.className = 'row-delete-button raw-button custom-appearance';
 
     closeButton.addEventListener('click', function (e) {
-      console.log('delete this row!');
+      self.urlContainer.removeChild(e.target.parentNode);
+      self.updateStorageFromDOM();
       e.stopPropagation();
       e.preventDefault();
     });
@@ -102,8 +114,8 @@ var RevereOptions = (function () {
     row.appendChild(inputEl);
 
     self.urlContainer.appendChild(row);
+    inputEl.focus();
   };
-
 
   self.getUrls = function () {
     chrome.storage.local.get('feeds', function (data) {
