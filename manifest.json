@@ -1,6 +1,6 @@
 {
   "name": "Revere : Warning system for webapps",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "manifest_version": 2,
   "description": "Get notifications when a status page is updated.",
   "homepage_url": "https://github.com/nickcanz/revere-extension",
@@ -18,6 +18,6 @@
   "options_page": "src/options/index.html",
   "browser_action": {
     "default_icon": "icons/revere-icon-19.png",
-    "default_title": "Revere : Warning system"
+    "default_title": "Revere : Warning system for webapps"
   }
 }

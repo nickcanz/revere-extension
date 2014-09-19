@@ -135,6 +135,10 @@ chrome.runtime.onInstalled.addListener(function () {
     ]
   });
 
+  chrome.tabs.create({url: 'src/options/index.html'}, function (tab) {
+    chrome.windows.update(tab.windowId, { focused: true });
+  });
+
   chrome.alarms.create('queryRSS', { periodInMinutes: 2 });
 });
 
