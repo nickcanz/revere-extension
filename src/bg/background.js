@@ -125,18 +125,23 @@ var Revere = (function () {
 } ());
 
 chrome.runtime.onInstalled.addListener(function () {
-  chrome.storage.local.set({
-    feeds: [
-      {url: 'https://status.heroku.com/feed'},
-      {url: 'http://status.aws.amazon.com/rss/ec2-us-east-1.rss'},
-      {url: 'http://feeds.feedburner.com/postmarkstatus?format=xml'},
-      {url: 'http://status.dploy.io/rss'},
-      {url: 'http://feeds.feedburner.com/beanstalkstatus?format=xml'}
-    ]
-  });
 
-  chrome.tabs.create({url: 'src/options/index.html'}, function (tab) {
-    chrome.windows.update(tab.windowId, { focused: true });
+  chrome.storage.local.get('feeds', function (items) {
+    if (!items['feeds']) {
+      chrome.storage.local.set({
+        feeds: [
+          {url: 'https://status.heroku.com/feed'},
+          {url: 'http://status.aws.amazon.com/rss/ec2-us-east-1.rss'},
+          {url: 'http://feeds.feedburner.com/postmarkstatus?format=xml'},
+          {url: 'http://status.dploy.io/rss'},
+          {url: 'http://feeds.feedburner.com/beanstalkstatus?format=xml'}
+        ]
+      });
+    }
+
+    chrome.tabs.create({url: 'src/options/index.html'}, function (tab) {
+      chrome.windows.update(tab.windowId, { focused: true });
+    });
   });
 
   chrome.alarms.create('queryRSS', { periodInMinutes: 2 });
